@@ -31,6 +31,12 @@ public class Board : MonoBehaviour
     public float halfRateTimer; //timer for half rate
     private bool doubleRate;
     private bool halfRate;
+    public bool isplayer1;
+    public bool isplayer2;
+    [SerializeField] TMP_Text gameOverText;
+
+    public bool selfOver;
+    
 
     [SerializeField] private GameObject inkSplatter;
 
@@ -56,6 +62,7 @@ public class Board : MonoBehaviour
     }
     private void Awake()
     {
+        gameOverText.enabled = false;
         specialIndToPieces = new Dictionary<int, List<Vector3Int>>();
         pieceToSpecialInd = new Dictionary<Vector3Int, int>();
         tilemap = GetComponentInChildren<Tilemap>();
@@ -115,6 +122,7 @@ public class Board : MonoBehaviour
         }
         else
         {
+            
             GameOver();
         }
     }
@@ -122,6 +130,21 @@ public class Board : MonoBehaviour
     private void GameOver()
     {
         tilemap.ClearAllTiles();
+        selfOver = true;
+        gameOverText.enabled = true;
+        scoreText.enabled = false;
+        
+        if (opponent.selfOver)
+        {
+            gameOverText.enabled = false;
+            if (opponent.isplayer1)
+                GameEndManager.EndGame(GameEndManager.Players.Player1);
+            else
+            {
+                GameEndManager.EndGame(GameEndManager.Players.Player2);
+            }
+        }
+        
         
     }
 

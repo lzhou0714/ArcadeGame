@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
 
@@ -135,7 +136,11 @@ public class Piece : MonoBehaviour
     {
         Board.Set(this);
         Board.ClearLines();
-        Board.SpawnPiece();
+        if (!Board.selfOver)
+        {
+            Board.SpawnPiece();
+        }
+        
         // if (isSpecial)
         // {
         //     Board.RecordSpecial();
