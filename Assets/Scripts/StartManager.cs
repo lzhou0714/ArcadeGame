@@ -22,10 +22,12 @@ public class StartManager : MonoBehaviour
         if (timer > 0 && timer < 50)
         {
             titleRenderer.color += fadeColor;
-        } else if (timer > 100 && timer < 130)
+        }
+        else if (timer > 100 && timer < 130)
         {
             titleRenderer.color -= fadeColor;
-        } else if (timer > 175 && timer < 203)
+        }
+        else if (timer > 175 && timer < 203)
         {
             if (timer % 3 == 0)
             {
@@ -35,7 +37,7 @@ public class StartManager : MonoBehaviour
 
         if (Input.anyKey)
         {
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene("SampleScene 1");
         }
 
         timer++;
