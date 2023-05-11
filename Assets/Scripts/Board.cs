@@ -306,6 +306,11 @@ public class Board : MonoBehaviour
         return true;
     }
 
+    public int GetScore()
+    {
+        return totalScore;
+    }
+
     // public void RecordSpecial()
     // {
     //     
