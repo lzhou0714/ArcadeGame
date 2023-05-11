@@ -6,6 +6,7 @@ using TMPro;
 public class GameEndManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI textMeshPro;
+    [SerializeField] Board[] board;
     static GameEndManager self;
 
     public enum Players
@@ -34,23 +35,6 @@ public class GameEndManager : MonoBehaviour
         }
     }
 
-    void NewFunction()
-    {
-        //if (Input.GetKey(Attack))
-        if (AttackPressed())
-        {
-
-        }
-
-    }
-
-    bool AttackPressed()
-    {
-        return Input.GetKey(Attack) || Input.GetKey(AttackAlternate);
-    }
-
-    KeyCode Attack = KeyCode.K;
-    KeyCode AttackAlternate = KeyCode.U;
     // Update is called once per frame
     void Update()
     {
