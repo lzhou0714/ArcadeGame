@@ -61,6 +61,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71d48b7be5c0c4021b2dd4fd715d602d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numLinesCleared: 0
+  pSpecial: 1
+  doubleRateTimer: 0
+  halfRateTimer: 0
   opponent: {fileID: 0}
   scoreText: {fileID: 0}
   highScoreText: {fileID: 0}
@@ -94,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIndex: 0
+  isSpecial: 0
   stepDelay: 1
   lockDelay: 0.5
 --- !u!114 &2186126058127587937
@@ -103,7 +108,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2186126058127587947}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 

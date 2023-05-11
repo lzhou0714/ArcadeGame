@@ -23,8 +23,8 @@ public class Piece : MonoBehaviour
     private Vector2 moveDir;
     public int rotationInd { get; private set; }
     public float stepDelay = 1f;
-    public float lockDelay = 0.5f;
-
+    public float lockDelay = 0.4f;
+    
     private float stepTime;
     private float lockTime;
     public void Initialize(Board board, Vector3Int position, TData tdata)
@@ -45,6 +45,7 @@ public class Piece : MonoBehaviour
         else
         {
             isSpecial = false;
+            isSpecial = false;
         }
 
         if (Cells == null)
@@ -62,6 +63,8 @@ public class Piece : MonoBehaviour
     {
         Board.Clear(this);
         lockTime += Time.deltaTime;
+        stepDelay -= Time.deltaTime / 1000f;
+        // Debug.Log(stepDelay);
         if (Time.time >= stepTime)
         {
             Step();
@@ -128,15 +131,15 @@ public class Piece : MonoBehaviour
     }
 
     //lock pieces in palce
-    private void Lock()
+    public void Lock()
     {
         Board.Set(this);
         Board.ClearLines();
         Board.SpawnPiece();
-        if (isSpecial)
-        {
-            Board.RecordSpecial();
-        }
+        // if (isSpecial)
+        // {
+        //     Board.RecordSpecial();
+        // }
     }
 
     
@@ -195,10 +198,7 @@ public class Piece : MonoBehaviour
 
             Cells[i] = new Vector3Int(x, y, 0);
         }
-        if (TestWallkicks(rotationInd, dir))
-        {
-            
-        }
+
     }
 
     private bool TestWallkicks(int rotationIndex, int rotationDirection)

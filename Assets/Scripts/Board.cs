@@ -1,24 +1,36 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using TMPro;
+using Unity.Mathematics;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 public class Board : MonoBehaviour
 {
     // Start is called before the first frame update
     private Tilemap tilemap;
+
+    public float numLinesCleared;
+    //for later////
     private Dictionary<int, List<Vector3Int>> specialIndToPieces;
     private Dictionary<Vector3Int, int> pieceToSpecialInd;
     private int specialInd = 0;
-    
-    public float pSpecial = 0.2f;
+    public float pSpecial = 1f;
+    //for later////
+
+    public float doubleRateTimer; //timer for doubled fall rate
+    public float halfRateTimer; //timer for half rate
+    private bool doubleRate;
+    private bool halfRate;
+
     [SerializeField] private Board opponent;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text highScoreText;
@@ -45,6 +57,7 @@ public class Board : MonoBehaviour
         pieceToSpecialInd = new Dictionary<Vector3Int, int>();
         tilemap = GetComponentInChildren<Tilemap>();
         activePiece = GetComponentInChildren<Piece>();
+        
         //loop through data and initialize teterominos data
         for (int i = 0; i < tetrominos.Length; i++)
         {
@@ -62,6 +75,29 @@ public class Board : MonoBehaviour
         highScore = PlayerPrefs.GetInt("High Score", 0);
         highScoreText.text = "High Score: " + highScore.ToString();
         scoreText.text = "Score: " + totalScore.ToString();
+        
+        if (halfRateTimer > 0)
+        {
+            halfRateTimer -= Time.deltaTime;
+            if (halfRateTimer < 0)
+            {
+                halfRateTimer = 0f;
+                activePiece.stepDelay /= 2; //return to normal
+                Debug.Log("half rate over: " + activePiece.stepDelay);
+            }
+        }
+
+        if (doubleRateTimer > 0)
+        {
+            doubleRateTimer -= Time.deltaTime;
+            if (doubleRateTimer < 0)
+            {
+                doubleRateTimer = 0f;
+                activePiece.stepDelay *= 2; //return to normal
+                Debug.Log("double rate over: " + activePiece.stepDelay);
+
+            }
+        }
     }
 
     public void SpawnPiece()
@@ -72,7 +108,6 @@ public class Board : MonoBehaviour
         activePiece.Initialize(this,spawnPosition , data);
         if (IsValidPosition(activePiece, spawnPosition))
         {
-            
             Set(activePiece);
         }
         else
@@ -84,6 +119,7 @@ public class Board : MonoBehaviour
     private void GameOver()
     {
         tilemap.ClearAllTiles();
+        Debug.Log("gameOvr");
     }
 
     public void Set(Piece piece)
@@ -97,12 +133,14 @@ public class Board : MonoBehaviour
 
     public void Clear(Piece piece)
     {
+        
         for (int i=0; i < piece.Cells.Length; i++)
         {
             Vector3Int tilePosition = piece.Cells[i] + piece.Position;
             tilemap.SetTile(tilePosition, null);
         }
     }
+    
     
     public bool IsValidPosition(Piece piece, Vector3Int position)
     {
@@ -125,15 +163,15 @@ public class Board : MonoBehaviour
             }
             
         }
-        
 
         return true;
     }
 
+    
     //clears line that are full
     public void ClearLines()
     {
-        float numLinesCleared = 0f;
+        // numLinesCleared = 0f;
         RectInt bounds = Bounds;
         int row = Bounds.yMin;
         
@@ -153,19 +191,81 @@ public class Board : MonoBehaviour
 
         if (numLinesCleared > 0f)
         {
+            
             totalScore += (int) Mathf.Pow(2f, numLinesCleared);
             if (totalScore > highScore)
             {
                 PlayerPrefs.SetInt("High Score", totalScore);
                 PlayerPrefs.Save();
             }
+
+            switch (numLinesCleared)
+            {
+                case 1: //nothing happens
+                    break;
+                case 2: //half your fall rate
+                    if (halfRateTimer == 0)
+                    {
+                        activePiece.stepDelay *= 2f; //half rate makes fall slower, retur to original speed
+                        halfRateTimer = 20f;
+                        Debug.Log(activePiece.stepDelay);
+                    }
+
+                    break;
+                case 3: //double other player's fall rate
+                    if (opponent.doubleRateTimer == 0)
+                    {
+                        opponent.activePiece.stepDelay /= 2f;
+                        opponent.doubleRateTimer = 20f;
+                    }
+
+                    break;
+                case 4: // refresh to next piece
+
+                    Debug.Log(spawnPosition);
+                    Debug.Log(activePiece.Position);
+                    Set(activePiece);
+                    Clear(activePiece);
+                    SpawnPiece();
+                    
+                    break;
+                default: //clear your entire board
+                    tilemap.ClearAllTiles();
+                    Debug.Log("clear all");
+                    break;
+            }
         }
+        
 
     }
 
-    public int[] LineClear(int row)
+    // public void MoveLines()
+    // {
+    //     RectInt bounds = Bounds;
+    //     
+    //     for (int row = bounds.yMax-1; row >= bounds.yMin; row--)
+    //     {
+    //         int moveUp = row + 5;
+    //         if (moveUp > bounds.yMax)
+    //         {
+    //         }
+    //     }
+    // }
+    // public void AddLines()
+    // {
+    //     RectInt bounds = Bounds;
+    //     int skip = Random.Range(bounds.xMin, bounds.xMax);
+    //     for (int col = bounds.xMin; col < bounds.xMax; col++)
+    //     {
+    //      if (col == skip)
+    //          continue;
+    //      
+    //     }
+    // }
+
+    public void LineClear(int row)
     {
-        int[] specialTilesVisited = new int[0];
+        // int[] specialTilesVisited = new int[0];
         RectInt bounds = Bounds;
         for (int col = bounds.xMin; col < bounds.xMax; col++)
         {
@@ -187,7 +287,7 @@ public class Board : MonoBehaviour
             row++;
         }
 
-        return specialTilesVisited;
+        // return specialTilesVisited;
     }
     
     //checks if line is full and need to be cleared
@@ -206,22 +306,19 @@ public class Board : MonoBehaviour
         return true;
     }
 
-    public void RecordSpecial()
-    {
-        
-        Debug.Log("special");
-        specialIndToPieces[specialInd] = new List<Vector3Int>();
-        for (int i = 0; i < activePiece.Cells.Length; i++)
-        {
-            Vector3Int pos = activePiece.Cells[i] + activePiece.Position;
-            specialIndToPieces[specialInd].Add(pos);
-            pieceToSpecialInd[pos] = specialInd;
-            Debug.Log(specialIndToPieces[specialInd][i]);
-        }
-        
-
-        specialInd++;
-        
-        
-    }
+    // public void RecordSpecial()
+    // {
+    //     
+    //     specialIndToPieces[specialInd] = new List<Vector3Int>();
+    //     Debug.Log("position:" + activePiece.Position);
+    //     for (int i = 0; i < activePiece.Cells.Length; i++)
+    //     {
+    //         Vector3Int pos = activePiece.Cells[i] + activePiece.Position;
+    //         specialIndToPieces[specialInd].Add(pos);
+    //         pieceToSpecialInd[pos] = specialInd;
+    //     }
+    //     
+    //     specialInd++;
+    //
+    // }
 }
