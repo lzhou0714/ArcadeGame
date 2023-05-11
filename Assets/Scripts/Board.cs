@@ -197,7 +197,7 @@ public class Board : MonoBehaviour
     //clears line that are full
     public void ClearLines()
     {
-        // numLinesCleared = 0f;
+        numLinesCleared = 0f;
         RectInt bounds = Bounds;
         int row = Bounds.yMin;
         
@@ -234,7 +234,6 @@ public class Board : MonoBehaviour
                     {
                         activePiece.stepDelay *= 2f; //half rate makes fall slower, retur to original speed
                         halfRateTimer = 20f;
-                        Debug.Log(activePiece.stepDelay);
                     }
 
                     break;
