@@ -171,7 +171,7 @@ public class Board : MonoBehaviour
     //clears line that are full
     public void ClearLines()
     {
-        // numLinesCleared = 0f;
+        numLinesCleared = 0f;
         RectInt bounds = Bounds;
         int row = Bounds.yMin;
         
