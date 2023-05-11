@@ -6,7 +6,6 @@ using System.Linq;
 using System.Numerics;
 using TMPro;
 using Unity.Mathematics;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -19,6 +18,7 @@ public class Board : MonoBehaviour
     // Start is called before the first frame update
     private Tilemap tilemap;
 
+    public int totalLinesCleared;
     public float numLinesCleared;
     //for later////
     private Dictionary<int, List<Vector3Int>> specialIndToPieces;
@@ -63,6 +63,7 @@ public class Board : MonoBehaviour
     private void Awake()
     {
         gameOverText.enabled = false;
+        totalLinesCleared = 0;
         specialIndToPieces = new Dictionary<int, List<Vector3Int>>();
         pieceToSpecialInd = new Dictionary<Vector3Int, int>();
         tilemap = GetComponentInChildren<Tilemap>();
@@ -136,6 +137,7 @@ public class Board : MonoBehaviour
         
         if (opponent.selfOver)
         {
+            opponent.gameOverText.enabled = false;
             gameOverText.enabled = false;
             if (opponent.isplayer1)
                 GameEndManager.EndGame(GameEndManager.Players.Player1);
@@ -217,6 +219,9 @@ public class Board : MonoBehaviour
 
         if (numLinesCleared > 0f)
         {
+            totalLinesCleared += (int)numLinesCleared;
+            activePiece.stepDelay -= totalLinesCleared * 0.005f;
+            Debug.Log(activePiece.stepDelay);
             
             totalScore += (int) Mathf.Pow(2f, numLinesCleared);
             if (totalScore > highScore)

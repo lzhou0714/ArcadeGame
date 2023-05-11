@@ -64,7 +64,7 @@ public class Piece : MonoBehaviour
     {
         Board.Clear(this);
         lockTime += Time.deltaTime;
-        stepDelay -= Time.deltaTime / 1000f;
+        
         // Debug.Log(stepDelay);
         if (Time.time >= stepTime)
         {
