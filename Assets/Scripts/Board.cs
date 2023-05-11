@@ -12,6 +12,7 @@ using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
+using Quaternion = UnityEngine.Quaternion;
 
 public class Board : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class Board : MonoBehaviour
     public float halfRateTimer; //timer for half rate
     private bool doubleRate;
     private bool halfRate;
+
+    [SerializeField] private GameObject inkSplatter;
 
     [SerializeField] private Board opponent;
     [SerializeField] private TMP_Text scoreText;
@@ -119,7 +122,7 @@ public class Board : MonoBehaviour
     private void GameOver()
     {
         tilemap.ClearAllTiles();
-        Debug.Log("gameOvr");
+        
     }
 
     public void Set(Piece piece)
@@ -171,7 +174,7 @@ public class Board : MonoBehaviour
     //clears line that are full
     public void ClearLines()
     {
-        numLinesCleared = 0f;
+        // numLinesCleared = 0f;
         RectInt bounds = Bounds;
         int row = Bounds.yMin;
         
@@ -218,50 +221,19 @@ public class Board : MonoBehaviour
                         opponent.activePiece.stepDelay /= 2f;
                         opponent.doubleRateTimer = 20f;
                     }
-
                     break;
-                case 4: // refresh to next piece
-
-                    Debug.Log(spawnPosition);
-                    Debug.Log(activePiece.Position);
-                    Set(activePiece);
-                    Clear(activePiece);
-                    SpawnPiece();
-                    
+                case 4: // splatter ink
+                    Instantiate(inkSplatter, opponent.transform.position, Quaternion.identity);
                     break;
                 default: //clear your entire board
                     tilemap.ClearAllTiles();
-                    Debug.Log("clear all");
                     break;
             }
         }
         
 
     }
-
-    // public void MoveLines()
-    // {
-    //     RectInt bounds = Bounds;
-    //     
-    //     for (int row = bounds.yMax-1; row >= bounds.yMin; row--)
-    //     {
-    //         int moveUp = row + 5;
-    //         if (moveUp > bounds.yMax)
-    //         {
-    //         }
-    //     }
-    // }
-    // public void AddLines()
-    // {
-    //     RectInt bounds = Bounds;
-    //     int skip = Random.Range(bounds.xMin, bounds.xMax);
-    //     for (int col = bounds.xMin; col < bounds.xMax; col++)
-    //     {
-    //      if (col == skip)
-    //          continue;
-    //      
-    //     }
-    // }
+    
 
     public void LineClear(int row)
     {
@@ -287,7 +259,6 @@ public class Board : MonoBehaviour
             row++;
         }
 
-        // return specialTilesVisited;
     }
     
     //checks if line is full and need to be cleared
@@ -310,20 +281,5 @@ public class Board : MonoBehaviour
     {
         return totalScore;
     }
-
-    // public void RecordSpecial()
-    // {
-    //     
-    //     specialIndToPieces[specialInd] = new List<Vector3Int>();
-    //     Debug.Log("position:" + activePiece.Position);
-    //     for (int i = 0; i < activePiece.Cells.Length; i++)
-    //     {
-    //         Vector3Int pos = activePiece.Cells[i] + activePiece.Position;
-    //         specialIndToPieces[specialInd].Add(pos);
-    //         pieceToSpecialInd[pos] = specialInd;
-    //     }
-    //     
-    //     specialInd++;
-    //
-    // }
+    
 }

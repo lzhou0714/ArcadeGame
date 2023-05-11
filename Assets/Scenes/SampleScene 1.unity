@@ -20790,9 +20790,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 333024974}
     m_Modifications:
     - target: {fileID: 2186126058127587941, guid: d931c17a419b244198c6e76427e5e131, type: 3}
+      propertyPath: opponent
+      value: 
+      objectReference: {fileID: 106765272}
+    - target: {fileID: 2186126058127587941, guid: d931c17a419b244198c6e76427e5e131, type: 3}
       propertyPath: scoreText
       value: 
       objectReference: {fileID: 1652856873}
+    - target: {fileID: 2186126058127587941, guid: d931c17a419b244198c6e76427e5e131, type: 3}
+      propertyPath: inkSplatter
+      value: 
+      objectReference: {fileID: 4236490641108385652, guid: 7963b2870d2a4c247a7ad576ece2a2a0, type: 3}
     - target: {fileID: 2186126058127587941, guid: d931c17a419b244198c6e76427e5e131, type: 3}
       propertyPath: highScoreText
       value: 
@@ -26087,16 +26095,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 333024974}
     m_Modifications:
     - target: {fileID: 2186126058127587941, guid: d931c17a419b244198c6e76427e5e131, type: 3}
+      propertyPath: opponent
+      value: 
+      objectReference: {fileID: 321608144}
+    - target: {fileID: 2186126058127587941, guid: d931c17a419b244198c6e76427e5e131, type: 3}
       propertyPath: scoreText
       value: 
       objectReference: {fileID: 1040329702}
+    - target: {fileID: 2186126058127587941, guid: d931c17a419b244198c6e76427e5e131, type: 3}
+      propertyPath: inkSplatter
+      value: 
+      objectReference: {fileID: 4236490641108385652, guid: 7963b2870d2a4c247a7ad576ece2a2a0, type: 3}
     - target: {fileID: 2186126058127587941, guid: d931c17a419b244198c6e76427e5e131, type: 3}
       propertyPath: highScoreText
       value: 
       objectReference: {fileID: 1244968339}
     - target: {fileID: 2186126058127587941, guid: d931c17a419b244198c6e76427e5e131, type: 3}
       propertyPath: tetrominos.Array.size
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2186126058127587941, guid: d931c17a419b244198c6e76427e5e131, type: 3}
       propertyPath: tetrominos.Array.data[7].tile
